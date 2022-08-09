@@ -74,6 +74,12 @@ class TopUniverisities:
 
     @staticmethod
     def get_rank_json_data(_node_id, _file_name):
+        """
+        Get ultimate raw data from txt link
+        :param _node_id: txt link name
+        :param _file_name: to be saved file name
+        :return: raw data
+        """
         data = TopUniverisities.get_json(
             f"https://www.topuniversities.com/sites/default/files/qs-rankings-data/en/{_node_id}.txt")["data"]
         with open(f"{Topuniversities_raw_path}{_file_name}.json", "w") as f:
