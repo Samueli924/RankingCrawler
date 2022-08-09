@@ -3,37 +3,33 @@ import time
 
 import requests
 import rich
-from bs4 import BeautifulSoup
-from utils.rank_sql import MYSQL
-
-
-HEADERS = {"user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"}
 
 # QS大学全球排名
-def get_school():
-    mysql = MYSQL()
-    qs_list = ["https://www.topuniversities.com/sites/default/files/qs-rankings-data/en/3794821.txt"]
-    # url_qs_2020 = "https://www.topuniversities.com/sites/default/files/qs-rankings-data/en/914824.txt"
-    # url_qs_2021 = "https://www.topuniversities.com/sites/default/files/qs-rankings-data/en/2057712.txt"
-    # url_qs_2022 = "https://www.topuniversities.com/sites/default/files/qs-rankings-data/en/3740566.txt"
-    # url_qs_2023 = "https://www.topuniversities.com/sites/default/files/qs-rankings-data/en/3816281.txt"
-    for i in range(3794815, 3794845):
-        print(f"start {i}")
-        qs_school = f"https://www.topuniversities.com/sites/default/files/qs-rankings-data/en/{i}.txt"
-        raw_school = requests.get(qs_school, headers=HEADERS).json()
-        # school_uid, school_name, school_region, school_country, school_city, school_logo, school_profile
-        all_school = len(raw_school["data"])
-        count = 1
-        for school in raw_school["data"]:
-            # 上传学校基础信息
-            if mysql.get_school_name(school["nid"]) is None:
-                school_name = re.findall("<a.*?>(.*?)</a>", school["title"])[0]
-                school_logo = str("https://www.topuniversities.com") + str(school["logo"])
-                school_profile = str("https://www.topuniversities.com") + str(re.findall("<a href=\"(.*?)\" class", school["title"])[0])
-                mysql.add_school((school["nid"], school_name, school["region"], school["country"], school["city"], school_logo, school_profile))
-                print(f"{count}/{all_school}: {school_name}信息上传成功")
 
-            count += 1
+# def get_school():
+#     mysql = MYSQL()
+#     qs_list = ["https://www.topuniversities.com/sites/default/files/qs-rankings-data/en/3794821.txt"]
+#     # url_qs_2020 = "https://www.topuniversities.com/sites/default/files/qs-rankings-data/en/914824.txt"
+#     # url_qs_2021 = "https://www.topuniversities.com/sites/default/files/qs-rankings-data/en/2057712.txt"
+#     # url_qs_2022 = "https://www.topuniversities.com/sites/default/files/qs-rankings-data/en/3740566.txt"
+#     # url_qs_2023 = "https://www.topuniversities.com/sites/default/files/qs-rankings-data/en/3816281.txt"
+#     for i in range(3794815, 3794845):
+#         print(f"start {i}")
+#         qs_school = f"https://www.topuniversities.com/sites/default/files/qs-rankings-data/en/{i}.txt"
+#         raw_school = requests.get(qs_school, headers=HEADERS).json()
+#         # school_uid, school_name, school_region, school_country, school_city, school_logo, school_profile
+#         all_school = len(raw_school["data"])
+#         count = 1
+#         for school in raw_school["data"]:
+#             # 上传学校基础信息
+#             if mysql.get_school_name(school["nid"]) is None:
+#                 school_name = re.findall("<a.*?>(.*?)</a>", school["title"])[0]
+#                 school_logo = str("https://www.topuniversities.com") + str(school["logo"])
+#                 school_profile = str("https://www.topuniversities.com") + str(re.findall("<a href=\"(.*?)\" class", school["title"])[0])
+#                 mysql.add_school((school["nid"], school_name, school["region"], school["country"], school["city"], school_logo, school_profile))
+#                 print(f"{count}/{all_school}: {school_name}信息上传成功")
+#
+#             count += 1
 
         # 上传学校排名信息
         # add_record("qs_2020", (school["nid"], school["rank_display"], school["score"]))
