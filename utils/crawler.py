@@ -1,9 +1,6 @@
 import json
 
-import requests
-
 from loguru import logger
-from bs4 import BeautifulSoup
 
 from utils.globalvar import *
 
@@ -11,35 +8,6 @@ from utils.globalvar import *
 class TopUniverisities:
     def __init__(self):
         pass
-
-    @staticmethod
-    def get_soup(url):
-        """
-        Get Beautifulsoup4 based bs4 node
-        :param url: link
-        :return: Beautifulsoup node
-        """
-        __resp = requests.get(url, headers=HEADERS)
-        __soup = BeautifulSoup(__resp.text, "lxml")
-        return __soup
-
-    @staticmethod
-    def get_json(url):
-        """
-        Get JSON based data
-        :param url: link
-        :return: JSON format data
-        """
-        __resp = requests.get(url, headers=HEADERS)
-        return __resp.json()
-
-    @staticmethod
-    def get_resp(url):
-        """
-        get Requests based resp
-        :return: resp node
-        """
-        return requests.get(url, headers=HEADERS)
 
     @staticmethod
     def get_rank_links(_method: str, _year: int = None):
@@ -56,7 +24,7 @@ class TopUniverisities:
             return list(map(
                 lambda x: [fs(str(x.text)), str("https://www.topuniversities.com") + str(x.attrs["href"])],
                 sum(list(map(lambda x: x.find_all("a"),
-                    TopUniverisities.get_soup(f"https://www.topuniversities.com/subject-rankings/{_year}").find_all(
+                    get_soup(f"https://www.topuniversities.com/subject-rankings/{_year}").find_all(
                     "div", attrs={"class": "select-subj"}))), [])))
         else:
             return [["", ""]]
@@ -80,7 +48,7 @@ class TopUniverisities:
         :param _file_name: to be saved file name
         :return: raw data
         """
-        data = TopUniverisities.get_json(
+        data = get_json(
             f"https://www.topuniversities.com/sites/default/files/qs-rankings-data/en/{_node_id}.txt")["data"]
         with open(f"{Topuniversities_raw_path}{_file_name}.json", "w") as f:
             json.dump(data, f)
@@ -117,3 +85,8 @@ class TopUniverisities:
         else:
             logger.error("Wrong Typo")
             return []
+
+
+class TimesRanking:
+    def __init__(self):
+        pass
